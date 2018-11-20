@@ -34,6 +34,7 @@ bin/start-job.sh
 ```
 # pytest
 python setup.py test
+
 # pytest with arguments
 python setup.py test -a -vvv
 ```
@@ -42,6 +43,7 @@ python setup.py test -a -vvv
 ```
 # clean without .egg folder
 python setup.py clean
+
 # clean with .egg folder
 python setup.py clean -e
 ```

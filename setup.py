@@ -5,10 +5,6 @@ from setuptools import setup, Command
 from setuptools.command.test import test as TestCommand
 
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
 class PyTest(TestCommand):
     """
         pytest
