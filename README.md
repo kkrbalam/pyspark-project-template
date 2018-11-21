@@ -12,8 +12,13 @@ source venv/bin/activate
 
 * install py_pkg in virtual env
 ```
-python py_pkg/cathay-configger/setup.py install
-python py_pkg/cathay-logger/setup.py install
+cd py_pkg/cathay-configger
+python setup.py install
+
+cd ../cathay-logger
+python setup.py install
+
+cd ../cathay-spark
 python py_pkg/cathay-spark/setup.py install
 ```
 
