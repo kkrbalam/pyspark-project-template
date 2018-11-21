@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from project_template.common.utils import TimeUtils
+from cathay_time_utils import TimeUtils
 
 
 def test_cvt_timezone_utc2tw():
