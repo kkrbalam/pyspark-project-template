@@ -1,16 +1,19 @@
 # pyspark project template
 
-* create venv
+- create venv
+
 ```
 virtualenv venv
 ```
 
-* enter into virtual env
+- enter into virtual env
+
 ```
 source venv/bin/activate
 ```
 
-* install py_pkg in virtual env
+- install py_pkg in virtual env
+
 ```
 cd py_pkg/cathay-configger
 python setup.py install
@@ -19,23 +22,26 @@ cd ../cathay-logger
 python setup.py install
 
 cd ../cathay-spark
-python py_pkg/cathay-spark/setup.py install
+python setup.py install
 ```
 
-* install pkg in your module
+- install pkg in your module
+
 ```
 python setup.py install
 ```
 
-* leave venv and execute
+- leave venv and execute
+
 ```
 deactivate
 bin/start-job.sh
 ```
 
--------
+---
 
-* test your project
+- test your project
+
 ```
 # pytest
 python setup.py test
@@ -44,7 +50,8 @@ python setup.py test
 python setup.py test -a -vvv
 ```
 
-* clean build files
+- clean build files
+
 ```
 # clean without .egg folder
 python setup.py clean

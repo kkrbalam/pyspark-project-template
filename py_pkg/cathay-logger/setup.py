@@ -24,5 +24,7 @@ setup(
     ],
     keywords=["logger"],
     entry_points={},
-    tests_require=[]
+    tests_require=[],
+    zip_safe=False
+
 )

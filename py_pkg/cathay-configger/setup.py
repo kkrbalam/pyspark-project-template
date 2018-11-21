@@ -24,5 +24,6 @@ setup(
     ],
     keywords=["configger"],
     entry_points={},
-    tests_require=[]
+    tests_require=[],
+    zip_safe=False
 )
