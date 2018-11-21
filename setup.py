@@ -61,11 +61,39 @@ class Clean(Command):
             os.system(cmd[key])
 
 
+class InstallLibs(Command):
+    """
+        install packages in py_pkg
+        usage:
+            python setup.py lib [-p py_pkg | --lib-path=py_pkg
+    """
+    description = "Install py_pkg libs"
+    user_options = [('lib-path=', 'p', "Arguments to install libs in py_pkg")]
+
+    def initialize_options(self):
+        self.lib_path = None
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        install_cmd = "python setup.py install"
+        project_dir = os.getcwd()
+        if self.lib_path is not None:
+            for pkg in os.listdir(self.lib_path):
+                os.chdir(os.path.join(project_dir, self.lib_path, pkg))
+                os.system(install_cmd)
+        else:
+            print('set py_pkg path')
+
+
 setup(
     entry_points={
         'console_scripts': [
             'second-entry=project_template.job.second_entry:main'
         ]
     },
-    cmdclass={'test': PyTest, 'clean': Clean}
+    cmdclass={'test': PyTest,
+              'clean': Clean,
+              'lib': InstallLibs}
 )

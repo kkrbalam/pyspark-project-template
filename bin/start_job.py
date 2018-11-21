@@ -7,8 +7,8 @@ from datetime import timedelta
 import click
 import logging
 from cathay_configger import Configger
+from cathay_time_utils import TimeUtils
 
-from project_template.common import TimeUtils
 from project_template.job import SubmitJob
 
 reload(sys)

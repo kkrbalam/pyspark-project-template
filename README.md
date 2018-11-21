@@ -12,17 +12,10 @@ virtualenv venv
 source venv/bin/activate
 ```
 
-- install py_pkg in virtual env
+- install all libs in py_pkg in virtual env
 
 ```
-cd py_pkg/cathay-configger
-python setup.py install
-
-cd ../cathay-logger
-python setup.py install
-
-cd ../cathay-spark
-python setup.py install
+python setup.py lib -p py_pkg
 ```
 
 - install pkg in your module

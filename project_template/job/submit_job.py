@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from basic import BasicJob
-from project_template.common import TimeUtils
+from cathay_time_utils import TimeUtils
 
 logger = logging.getLogger(__name__)
 

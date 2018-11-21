@@ -49,6 +49,9 @@ Thumbs.db
 */classes
 runtime/
 runtime_test/
+.eggs
+*.egg-info
+dist
 
 # python virtual ENV
 ################
