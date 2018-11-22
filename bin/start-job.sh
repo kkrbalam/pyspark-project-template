@@ -17,10 +17,12 @@ SPARK_JOB_NAME="example-job-name"
 
 export APP_TYPE="job"
 
+# from env.conf
+export ENV=${ENV}
+
 spark-submit \
     --name ${SPARK_JOB_NAME} \
-    --master yarn \
-    --deploy-mode client \
+    --master local \
     --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
     --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
     --executor-memory ${EXECUTOR_MEMORY} \
