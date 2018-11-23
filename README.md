@@ -26,7 +26,7 @@ $ ./build_tool/build.sh -h
 - 執行 build
 
 ```
-build.sh -b dev
+bin/build.sh -b dev
 ```
 
 ## 手動安裝
