@@ -26,7 +26,7 @@ class SubmitJob(BasicJob):
 
             # TODO write code for the job
 
-        except:
+        except Exception:
             raise
         finally:
             # close spark session

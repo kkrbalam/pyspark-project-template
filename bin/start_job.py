@@ -9,7 +9,7 @@ import logging
 from cathay_configger import Configger
 from cathay_time_utils import TimeUtils
 
-from project_template.job import SubmitJob
+from project_template.job.submit_job import SubmitJob
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
