@@ -16,14 +16,13 @@ if [[ "${ENV}" == "prod" ]]; then
     export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
     export PATH=$PATH:$SPARK_HOME/bin
 
-
 elif [[ "${ENV}" == "uat" ]]; then
 
     # == HADOOP + SPARK == 
     export HADOOP_CONF_DIR=/source/hadoop/conf
-    export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
+    # export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
+    export SPARK_HOME=/usr/local/spark-2.1.0-bin-hadoop2.7
     export PATH=$PATH:$SPARK_HOME/bin
-
 
 elif [[ "${ENV}" == "ut" ]]; then
 
@@ -39,5 +38,9 @@ elif [[ "${ENV}" == "dev" ]]; then
     export SPARK_HOME=/usr/local/spark-2.1.0-bin-hadoop2.7
     export PATH=$PATH:$SPARK_HOME/bin
 
-fi
+else
 
+    log_info "ENV: '${ENV}' not found!"
+    exit 2
+    
+fi

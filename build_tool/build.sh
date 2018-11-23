@@ -3,13 +3,12 @@ export APP_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 export APP_NAME="$(basename $APP_HOME)"
 
 . "${APP_HOME}/conf/default.conf"
-. "${APP_HOME}/conf/env.conf"
 
 # include log manipulation script start
 . "${APP_HOME}"/libexec/log.sh
 # include log manipulation script end
 
-
+. "${APP_HOME}"/libexec/str-parser.sh
 . "${APP_HOME}"/build_tool/build-utils.sh
 
 LIB_PATH="${APP_HOME}"/lib
@@ -78,6 +77,8 @@ if [[ -z ${ENV} ]] ; then
   exit 1
 fi
 
+. "${APP_HOME}/build_tool/build.conf"
+
 
 function clean_deps(){
     log_info "Start to Remove dependencies"
@@ -95,9 +96,10 @@ function build_project()
     fi
 
     log_info "Start to build project"
-
+    log_info "BUILD_PY_PROXY: ${BUILD_PY_PROXY}"
     # TODO
     log_info "write ${ENV} to ENV arg in env.conf"
+    grep -q "^ENV" "${APP_HOME}/conf/env.conf" && sed_command "s/^ENV.*/ENV=\\\"${ENV}\\\"/" "${APP_HOME}/conf/env.conf"
 
     build_py_project_func
 }
