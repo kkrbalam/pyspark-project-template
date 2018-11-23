@@ -36,7 +36,6 @@ function install_virtualenv()
     source ${PY_VENV}/bin/activate
 
     log_info "upgrade pip in venv"
-    log_info "${BUILD_PY_PROXY} : ${BUILD_PY_PROXY}"
     ${PY_VENV}/bin/pip install --upgrade pip --disable-pip-version-check --no-cache-dir ${BUILD_PY_PROXY}
 
     log_info "install setuptools wheel in venv"

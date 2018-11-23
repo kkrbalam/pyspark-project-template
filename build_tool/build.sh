@@ -96,10 +96,10 @@ function build_project()
     fi
 
     log_info "Start to build project"
-    log_info "BUILD_PY_PROXY: ${BUILD_PY_PROXY}"
-    # TODO
-    log_info "write ${ENV} to ENV arg in env.conf"
-    grep -q "^ENV" "${APP_HOME}/conf/env.conf" && sed_command "s/^ENV.*/ENV=\\\"${ENV}\\\"/" "${APP_HOME}/conf/env.conf"
+
+    env_config="${APP_HOME}/conf/env.conf"
+    log_info "write ${ENV} to ENV arg in $env_config"
+    grep -q "^ENV" "$env_config" && sed_command "s/^ENV.*/ENV=\\\"${ENV}\\\"/" "$env_config"
 
     build_py_project_func
 }
