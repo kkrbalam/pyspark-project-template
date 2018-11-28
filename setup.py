@@ -8,7 +8,7 @@ from setuptools.command.test import test as TestCommand
 
 class Install(install):
     """
-        pytest
+        custom install command
         usage
             python setup.py install [-i {arg}|--index-url={arg}]
     """
@@ -136,7 +136,6 @@ class InstallLibs(Command):
 
 
 setup(
-    # index_url= 'http://pypi.python.org/simple/',
     entry_points={
         'console_scripts': [
             'second-entry=project_template.job.second_entry:main'

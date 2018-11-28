@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 
 class Install(install):
     """
-        pytest
+        custom install command
         usage
             python setup.py install [-i {arg}|--index-url={arg}]
     """
