@@ -104,6 +104,9 @@ python setup.py test [-i <index-url>]
 
 # pytest with arguments
 python setup.py test [-i <index-url>] -a -vvv
+
+# only test your module (without modules in py_pkg)
+python setup.py test [-i <index-url>] -a tests
 ```
 
 - clean build files
