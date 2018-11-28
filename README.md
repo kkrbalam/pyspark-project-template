@@ -46,13 +46,13 @@ source venv/bin/activate
 - install all libs in py_pkg in virtual env
 
 ```
-python setup.py lib -p py_pkg
+python setup.py lib -p py_pkg [-i <index-url>]
 ```
 
 - install pkg in your module
 
 ```
-python setup.py install
+python setup.py install [-i <index-url>]
 ```
 
 - leave venv
@@ -100,10 +100,10 @@ databases.home_dir = /Users/darthbear
 
 ```
 # pytest
-python setup.py test
+python setup.py test [-i <index-url>]
 
 # pytest with arguments
-python setup.py test -a -vvv
+python setup.py test [-i <index-url>] -a -vvv
 ```
 
 - clean build files
