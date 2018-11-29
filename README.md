@@ -46,13 +46,13 @@ source venv/bin/activate
 - install all libs in py_pkg in virtual env
 
 ```
-python setup.py lib -p py_pkg [-i <index-url>]
+python setup.py lib -p py_pkg [-i <index-url> --trusted-host=<host>]
 ```
 
 - install pkg in your module
 
 ```
-python setup.py install [-i <index-url>]
+python setup.py install [-i <index-url> --trusted-host=<host>]
 ```
 
 - leave venv
@@ -100,13 +100,13 @@ databases.home_dir = /Users/darthbear
 
 ```
 # pytest
-python setup.py test [-i <index-url>]
+python setup.py test [-i <index-url> --trusted-host=<host>]
 
 # pytest with arguments
-python setup.py test [-i <index-url>] -a -vvv
+python setup.py test [-i <index-url> --trusted-host=<host>] -a -vvv
 
 # only test your module (without modules in py_pkg)
-python setup.py test [-i <index-url>] -a tests
+python setup.py test [-i <index-url> --trusted-host=<host>] -a tests
 ```
 
 - clean build files

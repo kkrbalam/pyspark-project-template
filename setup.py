@@ -13,26 +13,33 @@ class Install(install):
             python setup.py install [-i {arg}|--index-url={arg}]
     """
     description = "install with specific pypi server"
-    user_options = install.user_options + [('index-url=', 'i', "index url to download packages")]
+    user_options = install.user_options + [('index-url=', 'i', "index url to download packages"),
+                                           ('trusted-host=', None, "trusted host")]
 
     def initialize_options(self):
         install.initialize_options(self)
         # custom parameter
         self.index_url = None
+        self.trusted_host = None
 
     def finalize_options(self):
         install.finalize_options(self)
         # custom setting
-        default_url = 'https://pypi.org/simple/'
         if self.index_url is None:
-            print('url not set, using: {}'.format(default_url))
-            self.index_url = default_url
+            print('url not set, using default https://pypi.org/simple/')
+        else:
+            if self.trusted_host is None:
+                print('index-url: {}, while trusted host is not set'.format(self.index_url))
 
     def run(self):
         # custom pip install through index_url
         for dep in self.distribution.install_requires:
-            os.system(("pip install {dep} -i {url} --disable-pip-version-check "
-                       "--no-cache-dir").format(dep=dep, url=self.index_url))
+            install_cmd = "pip install {} --disable-pip-version-check --no-cache-dir".format(dep)
+            if self.index_url is not None:
+                install_cmd += " -i {}".format(self.index_url)
+            if self.trusted_host is not None:
+                install_cmd += " --trusted-host={}".format(self.trusted_host)
+            os.system(install_cmd)
         install.run(self)
 
 
@@ -43,22 +50,25 @@ class PyTest(TestCommand):
             python setup.py test [-a {arg}|--pytest-args={arg}]
     """
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test"),
-                    ('index-url=', 'i', "index url to download packages")]
+                    ('index-url=', 'i', "index url to download packages"),
+                    ('trusted-host=', None, "trusted host")]
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.pytest_args = []
         self.index_url = None
+        self.trusted_host = None
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
         # custom setting
-        default_url = 'https://pypi.org/simple/'
         if self.index_url is None:
-            print('url not set, using: {}'.format(default_url))
-            self.index_url = default_url
+            print('url not set, using default https://pypi.org/simple/')
+        else:
+            if self.trusted_host is None:
+                print('index-url: {}, while trusted host is not set'.format(self.index_url))
 
     def run_tests(self):
         # import here, cause outside the eggs aren't loaded
@@ -67,10 +77,56 @@ class PyTest(TestCommand):
         pytest_args = [self.pytest_args] if isinstance(self.pytest_args, basestring) else self.pytest_args
         # install requirements
         for dep in self.distribution.install_requires + self.distribution.tests_require:
-            os.system(("pip install {dep} -i {url} --disable-pip-version-check "
-                       "--no-cache-dir").format(dep=dep, url=self.index_url))
+            install_cmd = "pip install {} --disable-pip-version-check --no-cache-dir".format(dep)
+            if self.index_url is not None:
+                install_cmd += " -i {}".format(self.index_url)
+            if self.trusted_host is not None:
+                install_cmd += " --trusted-host={}".format(self.trusted_host)
+            os.system(install_cmd)
         errno = pytest.main(pytest_args)
         sys.exit(errno)
+
+
+class InstallLibs(Command):
+    """
+        install packages in py_pkg
+        usage:
+            python setup.py lib [-p py_pkg | --lib-path=py_pkg
+    """
+    description = "Install py_pkg libs"
+    user_options = [('lib-path=', 'p', "Arguments to install libs in py_pkg"),
+                    ('index-url=', 'i', "index url to download packages"),
+                    ('trusted-host=', None, "trusted host")]
+
+    def initialize_options(self):
+        self.lib_path = None
+        self.index_url = None
+        self.trusted_host = None
+
+    def finalize_options(self):
+        # custom setting
+        default_url = 'https://pypi.org/simple/'
+        if self.index_url is None:
+            print('url not set, using: {}'.format(default_url))
+            self.index_url = default_url
+        if self.trusted_host is None:
+            print('trusted host not set, might lead to unexpected result')
+
+    def run(self):
+        install_cmd = "python setup.py install"
+        if self.index_url is not None:
+            install_cmd += " -i {}".format(self.index_url)
+        if self.trusted_host is not None:
+            install_cmd += " --trusted-host={}".format(self.trusted_host)
+
+        project_dir = os.getcwd()
+        if self.lib_path is not None:
+            for pkg in os.listdir(self.lib_path):
+                print(os.path.join(project_dir, self.lib_path, pkg))
+                os.chdir(os.path.join(project_dir, self.lib_path, pkg))
+                os.system(install_cmd)
+        else:
+            print('set py_pkg path')
 
 
 class Clean(Command):
@@ -103,38 +159,6 @@ class Clean(Command):
             os.system(cmd[key])
 
 
-class InstallLibs(Command):
-    """
-        install packages in py_pkg
-        usage:
-            python setup.py lib [-p py_pkg | --lib-path=py_pkg
-    """
-    description = "Install py_pkg libs"
-    user_options = [('lib-path=', 'p', "Arguments to install libs in py_pkg"),
-                    ('index-url=', 'i', "index url to download packages")]
-
-    def initialize_options(self):
-        self.lib_path = None
-        self.index_url = None
-
-    def finalize_options(self):
-        # custom setting
-        default_url = 'https://pypi.org/simple/'
-        if self.index_url is None:
-            print('url not set, using: {}'.format(default_url))
-            self.index_url = default_url
-
-    def run(self):
-        install_cmd = "python setup.py install -i {}".format(self.index_url)
-        project_dir = os.getcwd()
-        if self.lib_path is not None:
-            for pkg in os.listdir(self.lib_path):
-                os.chdir(os.path.join(project_dir, self.lib_path, pkg))
-                os.system(install_cmd)
-        else:
-            print('set py_pkg path')
-
-
 setup(
     entry_points={
         'console_scripts': [
@@ -143,6 +167,6 @@ setup(
     },
     cmdclass={'install': Install,
               'test': PyTest,
-              'clean': Clean,
-              'lib': InstallLibs}
+              'lib': InstallLibs,
+              'clean': Clean}
 )
