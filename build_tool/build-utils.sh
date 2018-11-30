@@ -10,77 +10,90 @@ function build_basic_project_func()
     mkdir -p $APP_HOME/var/logs
 }
 
+
+
 function build_py_project_func()
 {
     log_info "[BUILD] Start to build $APP_NAME "
 
     build_basic_project_func
 
+    python_version=$1
+
+    if [[ -z $python_version ]];then
+        default_version=2
+        log_warn "python_version arg is empty, default: $default_version"
+        python_version=$default_version
+    fi
+
     cd "${APP_HOME}"
 
-    install_virtualenv
+    validate_python_rtn=$(validate_python_version $python_version)
+    log_info "validate_python_rtn: $validate_python_rtn"
+    if [[ $validate_python_rtn != 127 ]]; then
 
-    install_py_common_pkg
+        install_virtualenv $python_version
+        install_py_project
+    else
+        log_error "validate python error!"
+    fi
 
-    install_py_project
+}
 
+
+function validate_python_version()
+{
+    python_version=$1
+
+    python${python_version} -c 'import sys; print(sys.version_info[:])'
+    echo $?
 }
 
 function install_virtualenv()
 {
 
-    log_info "create python2.7 venv : $PY_VENV"
-    virtualenv -p python2.7 --no-setuptools --no-wheel --never-download $PY_VENV
+    python_version=$1
+
+    log_info "create python${python_version} venv : $PY_VENV"
+    virtualenv -p python${python_version} --no-setuptools --no-wheel --never-download ${PY_VENV}
 
     # enter virtualenv
     source ${PY_VENV}/bin/activate
 
     log_info "upgrade pip in venv"
-    ${PY_VENV}/bin/pip install --upgrade pip --disable-pip-version-check --no-cache-dir ${BUILD_PY_PROXY}
+
+    ${PY_VENV}/bin/pip install --upgrade pip --disable-pip-version-check --no-cache-dir ${PIP_OPTS}
+    # -i ${PYPI_INDEX_URL} --trusted-host ${PYPI_TRUSTED_HOST}
 
     log_info "install setuptools wheel in venv"
-    ${PY_VENV}/bin/pip install setuptools wheel --disable-pip-version-check --no-cache-dir ${BUILD_PY_PROXY}
+    ${PY_VENV}/bin/pip install setuptools wheel --disable-pip-version-check --no-cache-dir ${PIP_OPTS}
 
     # exit virtualenv
     deactivate
-
-}
-
-function install_py_setuptool()
-{
-    pkg_name=$1
-    pkg_path=$2
-    # enter virtualenv
-    source ${PY_VENV}/bin/activate
-
-    # install py_pkg by setup.py
-    log_info "install $pkg_name by setup.py"
-    cd $pkg_path
-    python setup.py install
-
-    # clean .egg folder or file
-    log_info "run setup.py clean -e"
-    cd $pkg_path
-    python setup.py clean -e
-    # exit virtualenv
-    deactivate
-}
-
-function install_py_common_pkg()
-{
-    # install py_pkg
-    for pkg in ${APP_HOME}/py_pkg/*
-    do
-        pkg_name="$(basename $pkg)"
-
-        install_py_setuptool $pkg_name $pkg
-    done
 
 }
 
 function install_py_project()
 {
-    install_py_setuptool $APP_NAME $APP_HOME
+    # enter virtualenv
+    source ${PY_VENV}/bin/activate
+
+    # install moudule in py_pkg  
+    log_info "install py_pkg by setup.py"
+    py_pkg_path=${APP_HOME}/py_pkg
+    python setup.py lib -p ${py_pkg_path} -a ${PIP_OPTS}
+
+    # install moudule in main project 
+    log_info "install ${APP_NAME} by setup.py"
+    cd ${APP_HOME}
+    python setup.py install -a ${PIP_OPTS}
+
+    # clean .egg folder or file
+    log_info "run setup.py clean -e"
+    cd ${APP_HOME}
+    python setup.py clean -e
+    # exit virtualenv
+    deactivate
 }
 
 

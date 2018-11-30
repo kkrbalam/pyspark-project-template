@@ -21,12 +21,13 @@ $ ./build_tool/build.sh -h
        -b|--build                            Build project
        -c|--clean                            Clean last build result
        -r|--rebuild                          Rebuild Project
+       -p|--python                           Python version (Default:2) e.g. --python 2.7
 ```
 
 - 執行 build
 
 ```
-build_tool/build.sh -b dev
+build_tool/build.sh -b dev -p 2.7
 ```
 
 ## 手動安裝

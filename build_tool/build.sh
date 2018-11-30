@@ -23,10 +23,11 @@ function usage()
        -b|--build                            Build project
        -c|--clean                            Clean last build result
        -r|--rebuild                          Rebuild Project
+       -p|--python                           Python version (Default:2) e.g. --python 2.7
     "
 }
 
-args=`getopt -o hrbcd --long build,clean,rebuild,help \
+args=`getopt -o hrbcdp: --long build,clean,rebuild,python:,help \
      -n 'build.sh' -- "$@"`
 
 if [ $? != 0 ] ; then
@@ -51,6 +52,10 @@ while true ; do
         CLEAN_OPT="true"
         shift
         ;;
+    -p|--python )
+        PYTHON_VERSION="$2"
+        shift 2
+        ;;
     -h|--help )
         usage
         exit
@@ -71,7 +76,7 @@ for arg do
 done
 
 # check for required args
-if [[ -z ${ENV} ]] ; then
+if [[ -z ${ENV} ]] && [[ -n ${BUILD_OPT} ]] ; then
   echo "$(basename $0): missing ENV : ${ENV}"
   usage
   exit 1
@@ -101,7 +106,7 @@ function build_project()
     log_info "write ${ENV} to ENV arg in $env_config"
     grep -q "^ENV" "$env_config" && sed_command "s/^ENV.*/ENV=\\\"${ENV}\\\"/" "$env_config"
 
-    build_py_project_func
+    build_py_project_func ${PYTHON_VERSION}
 }
 
 function clean_project()
