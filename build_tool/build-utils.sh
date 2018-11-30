@@ -78,15 +78,15 @@ function install_py_project()
     # enter virtualenv
     source ${PY_VENV}/bin/activate
 
-    # install moudule in py_pkg  
+    # install moudule in py_pkg
     log_info "install py_pkg by setup.py"
     py_pkg_path=${APP_HOME}/py_pkg
-    python setup.py lib -p ${py_pkg_path} -a ${PIP_OPTS}
+    python setup.py lib -p ${py_pkg_path} --pip-args="${PIP_OPTS}"
 
-    # install moudule in main project 
+    # install moudule in main project
     log_info "install ${APP_NAME} by setup.py"
     cd ${APP_HOME}
-    python setup.py install -a ${PIP_OPTS}
+    python setup.py install --pip-args="${PIP_OPTS}"
 
     # clean .egg folder or file
     log_info "run setup.py clean -e"
