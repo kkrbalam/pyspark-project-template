@@ -87,7 +87,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     python_requires=">=2.7",
-    install_requires=['pyhocon>=0.3.38'],
+    install_requires=['pyhocon==0.3.38'],
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
