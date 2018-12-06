@@ -47,7 +47,7 @@ class TimeUtils(object):
             input:  base:type(int | datetime | date | string)
             output: datetime:type(datetime)
         '''
-        if isinstance(base, basestring):
+        if isinstance(base, str):
             base = datetime.strptime(base, fmt)
 
         elif isinstance(base, int):
