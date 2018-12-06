@@ -139,11 +139,6 @@ class Clean(Command):
 
 
 setup(
-    entry_points={
-        'console_scripts': [
-            'second-entry=project_template.job.second_entry:main'
-        ]
-    },
     cmdclass={'install': Install,
               'test': PyTest,
               'lib': InstallLibs,
