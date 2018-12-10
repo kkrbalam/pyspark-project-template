@@ -58,17 +58,19 @@ class PyTest(TestCommand):
         if self.pip_args is None:
             print('pip_args not set, using default https://pypi.org/simple/')
 
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        # pytest should pass list object to main, so turn it to list if there's only one option
-        pytest_args = [self.pytest_args] if isinstance(self.pytest_args, basestring) else self.pytest_args
-
+    def run(self):
         for dep in self.distribution.install_requires + self.distribution.tests_require:
             install_cmd = "pip install {} --disable-pip-version-check --no-cache-dir".format(dep)
             if self.pip_args is not None:
                 install_cmd += ' ' + self.pip_args
             os.system(install_cmd)
+        TestCommand.run(self)
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        # pytest should pass list object to main, so turn it to list if there's only one option
+        pytest_args = [self.pytest_args] if isinstance(self.pytest_args, basestring) else self.pytest_args
         errno = pytest.main(pytest_args)
         sys.exit(errno)
 
