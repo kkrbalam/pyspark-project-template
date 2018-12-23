@@ -1,7 +1,7 @@
 from __future__ import print_function
 import os
 import sys
-from setuptools import setup, Command
+from setuptools import setup, Command, find_packages
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
 
@@ -140,7 +140,27 @@ class Clean(Command):
             os.system(cmd[key])
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
+    name="demo",
+    version="1.0",
+    author="Cathay",
+    description="python project",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.7"
+    ],
+    keywords=["pyspark", "template"],
+    packages=find_packages(),
+    python_requires=">=2.7",
+    install_requires=['click==6.6'],
+    tests_require=['pytest'],
+    zip_safe=False,
     cmdclass={'install': Install,
               'test': PyTest,
               'lib': InstallLibs,
