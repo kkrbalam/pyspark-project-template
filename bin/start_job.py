@@ -53,7 +53,6 @@ def receive(conf):
         logger.error("Start Submit Job fail, find config by {} ENV error.".format(current_env))
         exit(2)
 
-    logger.info(merge_configs.get("output.table"))
     # job
     logger.info("Start submit job...")
     try:
