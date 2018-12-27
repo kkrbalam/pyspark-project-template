@@ -4,7 +4,7 @@ export APP_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 . "${APP_HOME}"/libexec/log.sh
 
 . "${APP_HOME}/conf/default.conf"
-. "${APP_HOME}/conf/env.conf"
+#. "${APP_HOME}/conf/env.conf"
 . "${APP_HOME}/conf/runtime-env-info.sh"
 . "${APP_HOME}/libexec/run-py-venv.sh"
 
@@ -23,15 +23,16 @@ export APP_TYPE="job"
 # from env.conf
 export ENV=${ENV}
 
+python ${START_PATH} -c ${CONF_PATH} -a ${APP_HOME}
 
-spark-submit \
-    --name ${SPARK_JOB_NAME} \
-    --master local \
-    --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
-    --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
-    --executor-memory ${EXECUTOR_MEMORY} \
-    --executor-cores ${EXECUTOR_CORES} \
-    --num-executors ${NUM_EXECUTORS} \
-    --driver-memory ${DRIVER_MEMORY} \
-    --driver-cores ${DRIVER_CORES} \
-    ${START_PATH} -c ${CONF_PATH}
+# spark-submit \
+#     --name ${SPARK_JOB_NAME} \
+#     --master local \
+#     --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
+#     --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
+#     --executor-memory ${EXECUTOR_MEMORY} \
+#     --executor-cores ${EXECUTOR_CORES} \
+#     --num-executors ${NUM_EXECUTORS} \
+#     --driver-memory ${DRIVER_MEMORY} \
+#     --driver-cores ${DRIVER_CORES} \
+#     ${START_PATH} -c ${CONF_PATH}
