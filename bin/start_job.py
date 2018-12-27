@@ -6,58 +6,46 @@ import traceback
 from datetime import timedelta
 
 import click
-from pyhocon import ConfigTree
+import papermill as pm
 
-import logging
-from cathay_configger import Configger
 from cathay_time_utils import TimeUtils
 
-from project_template.job.submit_job import SubmitJob
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-logger = logging.getLogger(__name__)
-
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+def get_logger():
+    from cathay_logger import Logger
+
+    __log_config_path = 'conf/logging_config.ini'
+    __app_type = os.environ['APP_TYPE']
+    return Logger(__log_config_path).get_logger(__app_type, __name__)
+
+
+logger = get_logger()
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('-c', '--conf', help='config')
-def receive(conf):
+@click.option('-a', '--app-home', help='app home')
+def receive(conf, app_home):
     logger.info("======== Start Submit Job ... ========")
     start = TimeUtils.get_now('ts')
 
-    # load configs
-    logger.info("Load configs...")
-    try:
-        confs = []
-        for sub_conf in conf.split(':'):
-            Configger.path(sub_conf)
-            confs.append(Configger.get_config())
-    except Exception:
-        logger.error("Start Submit Job fail, please check your configurations.")
-        exit(2)
-    else:
-        # merge configs
-        logger.info("Merge configs...")
-        configs = Configger.merge_configs(confs)
-
-    try:
-        current_env = os.environ['ENV']
-        common_configs = configs.get('common', ConfigTree())
-        env_configs = configs.get(current_env)
-        merge_configs = Configger.merge_configs([common_configs, env_configs])
-    except Exception:
-        logger.error(traceback.format_exc())
-        logger.error("Start Submit Job fail, find config by {} ENV error.".format(current_env))
-        exit(2)
-
     # job
-    logger.info("Start submit job...")
+    logger.info("Start submit jupyter job...")
     try:
-        submitJob = SubmitJob(config=merge_configs)
-        submitJob.start()
+        date = TimeUtils.cvt_datetime2str(TimeUtils.get_now('dt'), '%Y-%m-%d')
+        yyyymm = TimeUtils.cvt_datetime2str(TimeUtils.get_now('dt'), '%Y%m')
+        db_tbl = 'test'
+        pm.execute_notebook(
+            '{}/jupyter_job/submit_job.ipynb'.format(app_home),
+            '{}/jupyter_job/submit_job_{}.ipynb'.format(app_home, date),
+            parameters=dict(yyyymm=yyyymm, db_tbl=db_tbl, conf=conf)
+        )
     except Exception:
         logger.error(traceback.format_exc())
         exit(2)

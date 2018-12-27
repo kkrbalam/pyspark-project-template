@@ -40,7 +40,7 @@ eval set -- "$args"
 while true ; do
   case "$1" in
     -b|--build )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         shift
         ;;
     -c|--clean )
@@ -48,7 +48,7 @@ while true ; do
         shift
         ;;
     -r|--rebuild )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         CLEAN_OPT="true"
         shift
         ;;
@@ -93,7 +93,7 @@ function clean_deps(){
 function build_project()
 {
 
-    # check exists for ENV variable and config 
+    # check exists for ENV variable and config
     if [[ -z ${ENV} ]] ; then
         echo "$(basename $0): missing ENV : ${ENV}"
         usage
@@ -111,7 +111,7 @@ function build_project()
 
 function clean_project()
 {
-    
+
     log_info "Start to clean project"
     clean_project_func
 }
@@ -126,4 +126,3 @@ fi
 if [[ -n $BUILD_OPT ]]; then
     build_project
 fi
-
