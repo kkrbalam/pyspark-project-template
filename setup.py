@@ -200,15 +200,15 @@ setup(
     name="project_template",
     version="1.0",
     author="Cathay",
-    description="python project",
+    description="python jupyter project",
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.7"
+        "Programming Language :: Python"
     ],
-    keywords=["pyspark", "template"],
+    keywords=["pyspark", "template", "jupyter"],
     packages=find_packages(),
     python_requires=">=2.7",
     install_requires=install_require,
