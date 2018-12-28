@@ -4,7 +4,7 @@ export APP_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 . "${APP_HOME}"/libexec/log.sh
 
 . "${APP_HOME}/conf/default.conf"
-#. "${APP_HOME}/conf/env.conf"
+. "${APP_HOME}/conf/env.conf"
 . "${APP_HOME}/conf/runtime-env-info.sh"
 . "${APP_HOME}/libexec/run-py-venv.sh"
 
