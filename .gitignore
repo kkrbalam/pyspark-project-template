@@ -28,6 +28,7 @@
 */var/run
 */*/*/*/run/*
 */*/*/*/logs/*
+var/config
 
 # OS generated files #
 ######################
