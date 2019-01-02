@@ -12,8 +12,9 @@ START_PATH=${APP_HOME}/bin/start_job.py
 
 CONF_PATH_JOB=${APP_HOME}/conf/job.conf
 CONF_PATH_HIPPO=${APP_HOME}/conf/hippo.conf
+CONF_PATH_SPARK=${APP_HOME}/conf/spark.conf
 CONF_PATH_JUPYTER=${APP_HOME}/conf/jupyter.conf
-CONF_PATH=${CONF_PATH_JOB}:${CONF_PATH_HIPPO}
+CONF_PATH=${CONF_PATH_JOB}:${CONF_PATH_HIPPO}:${CONF_PATH_JUPYTER}:${CONF_PATH_SPARK}
 
 cd ${APP_HOME}
 
@@ -23,8 +24,9 @@ export APP_TYPE="job"
 
 # from env.conf
 export ENV=${ENV}
+export APP_HOME=${APP_HOME}
 
-python ${START_PATH} -c ${CONF_PATH} -j ${CONF_PATH_JUPYTER} -a ${APP_HOME}
+python ${START_PATH} -c ${CONF_PATH} -a ${APP_HOME}
 
 # spark-submit \
 #     --name ${SPARK_JOB_NAME} \

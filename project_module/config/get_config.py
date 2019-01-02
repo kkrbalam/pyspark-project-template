@@ -1,4 +1,5 @@
 import os
+import pickle
 import traceback
 
 from pyhocon import ConfigTree
@@ -18,7 +19,7 @@ def merge_env_configs(conf):
             Configger.path(sub_conf)
             confs.append(Configger.get_config())
     except Exception:
-        logger.error("Start Submit Job fail, please check your configurations.")
+        logger.error("Parse config fail, please check your configurations.")
         raise
 
     else:
@@ -26,12 +27,24 @@ def merge_env_configs(conf):
         logger.info("Merge configs...")
         configs = Configger.merge_configs(confs)
 
-    try:
         current_env = os.environ['ENV']
+        merge_configs = get_config_by_env(configs, current_env)
+        return merge_configs
+
+
+def get_config_by_env(configs, current_env):
+    try:
         common_configs = configs.get('common', ConfigTree())
         env_configs = configs.get(current_env)
         merge_configs = Configger.merge_configs([common_configs, env_configs])
         return merge_configs
     except Exception:
         logger.error(traceback.format_exc())
-        logger.error("Start Submit Job fail, find config by {} ENV error.".format(current_env))
+        logger.error("Fetch config by {} ENV error.".format(current_env))
+
+
+def load_config():
+    app_home = os.environ['APP_HOME']
+    with open(os.path.join(app_home, 'var/config/config.pkl'), 'rb') as f:
+        config = pickle.load(f)
+    return config
