@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 
 from cathay_spark import get_yarn_spark
 
-from project_module.config import load_config
+from cathay.config import load_config
 
 import logging
 logger = logging.getLogger(__name__)

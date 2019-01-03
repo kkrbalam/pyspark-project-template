@@ -24,9 +24,8 @@ export APP_TYPE="job"
 
 # from env.conf
 export ENV=${ENV}
-export APP_HOME=${APP_HOME}
 
-python ${START_PATH} -c ${CONF_PATH} -a ${APP_HOME}
+python ${START_PATH} -c ${CONF_PATH}
 
 # spark-submit \
 #     --name ${SPARK_JOB_NAME} \

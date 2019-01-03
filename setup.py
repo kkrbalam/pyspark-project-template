@@ -197,7 +197,7 @@ dev_require = [req.strip() for req in read(dev_req_path).splitlines() if req.str
 extras_require = {"dev": dev_require}
 
 setup(
-    name="project_template",
+    name="cathay",
     version="1.0",
     author="Cathay",
     description="python jupyter project",
@@ -211,17 +211,9 @@ setup(
     keywords=["pyspark", "template", "jupyter"],
     packages=find_packages(),
     python_requires=">=2.7",
-<<<<<<< HEAD
     install_requires=install_require,
     tests_require=dev_require,
     extras_require=extras_require,
-=======
-    install_requires=['click==6.6',
-                      'ipython==5.8.0',
-                      'ipykernel==4.10.0',
-                      'papermill==0.16.2'],
-    tests_require=['pytest'],
->>>>>>> [Initial] jupyter verson of template
     zip_safe=False,
     cmdclass={'install': Install,
               'test': PyTest,
