@@ -144,7 +144,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="demo",
+    name="cathay",
     version="1.0",
     author="Cathay",
     description="python jupyter project",
