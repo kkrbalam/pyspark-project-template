@@ -15,7 +15,7 @@ import logging
 from cathay_time_utils import TimeUtils
 from cathay_configger import Configger
 
-from project_module.config import merge_env_configs
+from cathay.config import merge_env_configs
 
 
 reload(sys)
@@ -28,10 +28,12 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('-c', '--conf', help='config')
-@click.option('-a', '--app-home', help='app home')
-def receive(conf, app_home):
+def receive(conf):
     logger.info("======== Start Submit Job ... ========")
     start = TimeUtils.get_now('ts')
+
+    # get app home
+    app_home = os.environ['APP_HOME']
 
     # merge all configs
     configs = merge_env_configs(conf)
