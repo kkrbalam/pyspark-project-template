@@ -6,6 +6,7 @@ from pyspark.sql import SparkSession
 
 def get_spark(app_name, mode):
     # init spark session
+    # mode: local, yarn
     spark = SparkSession \
         .builder \
         .appName(app_name) \
