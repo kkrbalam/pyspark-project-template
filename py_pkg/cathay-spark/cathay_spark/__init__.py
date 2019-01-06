@@ -1,1 +1,1 @@
-from spark import get_yarn_spark
+from spark import get_spark

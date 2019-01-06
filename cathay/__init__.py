@@ -4,6 +4,8 @@ import sys
 if hasattr(sys, '_called_from_test'):
     # called from within a test run
     pass
+elif os.environ['APP_TYPE'] == 'jupyter':
+    pass
 else:
     from cathay_logger import Logger
 

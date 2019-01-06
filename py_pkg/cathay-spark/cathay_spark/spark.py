@@ -4,12 +4,13 @@ from __future__ import unicode_literals
 from pyspark.sql import SparkSession
 
 
-def get_yarn_spark(app_name):
+def get_spark(app_name, mode):
     # init spark session
+    # mode: local, yarn
     spark = SparkSession \
         .builder \
         .appName(app_name) \
-        .master('local') \
+        .master(mode) \
         .enableHiveSupport() \
         .config('hive.exec.dynamic.partition.mode', 'nonstrict') \
         .config('spark.sql.parquet.compression.codec', 'uncompressed') \
