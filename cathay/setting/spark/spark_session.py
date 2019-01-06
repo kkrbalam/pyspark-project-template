@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession
 
 from cathay_spark import get_spark
 
-from cathay.config import load_config
+from cathay.setting.config import load_config
 
 import logging
 logger = logging.getLogger(__name__)
