@@ -1,6 +1,8 @@
+import os
+
 from pyspark.sql import SparkSession
 
-from cathay_spark import get_yarn_spark
+from cathay_spark import get_spark
 
 from cathay.config import load_config
 
@@ -10,10 +12,22 @@ logger = logging.getLogger(__name__)
 
 def get_spark_session():
     config = load_config()
-    app_name = config.get('hippo.name')
 
-    logger.info('get spark session')
-    spark = get_yarn_spark(app_name)
+    # set app_name
+    if os.environ['APP_TYPE'] == 'jupyter':
+        app_name = config.get('jupyter.test.name')
+    else:
+        app_name = config.get('hippo.name')
+
+    # set spark mode
+    if os.environ['ENV'] == 'dev':
+        mode = 'local'
+    else:
+        mode = 'yarn'
+
+    # init spark session
+    logger.info('get spark session, mode: {}'.format(mode))
+    spark = get_spark(app_name, mode)
 
     spark.conf.set("spark.executor.memory", config.get("spark.executor.memory"))
     spark.conf.set("spark.executor.cores", config.get("spark.executor.cores"))
