@@ -1,8 +1,9 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import logging
-from cathay_spark import get_yarn_spark
+from cathay_spark import get_spark
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,13 @@ class BasicJob(object):
         self.hippo_name = config.get('hippo.name')
 
     def _get_spark_session(self):
-        logger.info('get spark session ...')
-        self.spark = get_yarn_spark(self.hippo_name)
+        if os.environ['ENV'] == 'dev':
+            mode = 'local'
+        else:
+            mode = 'yarn'
+
+        logger.info('get spark session, mode:{} ...'.format(mode))
+        self.spark = get_spark(self.hippo_name, mode)
 
     def _close_spark_session(self):
         logger.info('close spark session ...')
