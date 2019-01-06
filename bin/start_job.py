@@ -11,8 +11,8 @@ import logging
 from cathay_time_utils import TimeUtils
 from cathay_configger import Configger
 
-from cathay.config import merge_env_configs
-from cathay.jupyter import get_jupyter_dir, rm_jupyter_history, dump_configs
+from cathay.setting.config import merge_env_configs
+from cathay.setting.jupyter import get_jupyter_dir, rm_jupyter_history, dump_configs
 
 
 reload(sys)
