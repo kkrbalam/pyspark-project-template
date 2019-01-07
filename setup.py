@@ -1,6 +1,8 @@
 from __future__ import print_function
 import os
 import sys
+from io import open
+
 from setuptools import setup, Command, find_packages
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
@@ -140,11 +142,28 @@ class Clean(Command):
             os.system(cmd[key])
 
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+python_2 = sys.version_info[0] == 2
+app_home = os.path.dirname('__file__')
+
+
+def read(fname):
+    with open(fname, 'rU' if python_2 else 'r') as f:
+        return f.read()
+
+
+with open(os.path.join(app_home, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+install_req_path = os.path.join(app_home, 'docs/requirements.txt')
+install_require = [req.strip() for req in read(install_req_path).splitlines() if req.strip()]
+
+dev_req_path = os.path.join(app_home, 'docs/requirements-dev.txt')
+dev_require = [req.strip() for req in read(dev_req_path).splitlines() if req.strip()]
+
+extras_require = {"dev": dev_require}
 
 setup(
-    name="demo",
+    name="project_template",
     version="1.0",
     author="Cathay",
     description="python project",
@@ -158,8 +177,9 @@ setup(
     keywords=["pyspark", "template"],
     packages=find_packages(),
     python_requires=">=2.7",
-    install_requires=['click==6.6'],
-    tests_require=['pytest'],
+    install_requires=install_require,
+    tests_require=dev_require,
+    extras_require=extras_require,
     zip_safe=False,
     cmdclass={'install': Install,
               'test': PyTest,

@@ -56,6 +56,11 @@ python setup.py lib -p py_pkg [--pip-args="-i <index-url> --trusted-host=<host>"
 python setup.py install [--pip-args="-i <index-url> --trusted-host=<host>"]
 ```
 
+- [opt] install dev-libs
+```
+pip install -e .[dev] -i <index-url> --trusted-host=<host>
+```
+
 - leave venv
 
 ```
