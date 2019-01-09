@@ -6,7 +6,6 @@ import pickle
 from datetime import timedelta
 
 import click
-from pyhocon import ConfigTree
 import papermill as pm
 
 import logging
