@@ -12,7 +12,9 @@ START_PATH=${APP_HOME}/bin/start_job.py
 
 CONF_PATH_JOB=${APP_HOME}/conf/job.conf
 CONF_PATH_HIPPO=${APP_HOME}/conf/hippo.conf
-CONF_PATH=${CONF_PATH_JOB}:${CONF_PATH_HIPPO}
+CONF_PATH_SPARK=${APP_HOME}/conf/spark.conf
+CONF_PATH_JUPYTER=${APP_HOME}/conf/jupyter.conf
+CONF_PATH=${CONF_PATH_JOB}:${CONF_PATH_HIPPO}:${CONF_PATH_JUPYTER}:${CONF_PATH_SPARK}
 
 cd ${APP_HOME}
 
@@ -23,15 +25,16 @@ export APP_TYPE="job"
 # from env.conf
 export ENV=${ENV}
 
+python ${START_PATH} -c ${CONF_PATH}
 
-spark-submit \
-    --name ${SPARK_JOB_NAME} \
-    --master local \
-    --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
-    --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
-    --executor-memory ${EXECUTOR_MEMORY} \
-    --executor-cores ${EXECUTOR_CORES} \
-    --num-executors ${NUM_EXECUTORS} \
-    --driver-memory ${DRIVER_MEMORY} \
-    --driver-cores ${DRIVER_CORES} \
-    ${START_PATH} -c ${CONF_PATH}
+# spark-submit \
+#     --name ${SPARK_JOB_NAME} \
+#     --master local \
+#     --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
+#     --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
+#     --executor-memory ${EXECUTOR_MEMORY} \
+#     --executor-cores ${EXECUTOR_CORES} \
+#     --num-executors ${NUM_EXECUTORS} \
+#     --driver-memory ${DRIVER_MEMORY} \
+#     --driver-cores ${DRIVER_CORES} \
+#     ${START_PATH} -c ${CONF_PATH}
