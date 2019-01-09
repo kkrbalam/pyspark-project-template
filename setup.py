@@ -165,7 +165,7 @@ class Clean(Command):
     def run(self):
         cmd = dict(
             build="find ./ -name 'build' -exec rm -rf {} +",
-            egg_info="find ./ -name '*.egg-info' -exec rm -rf {} +",
+            egg_info="find . -name '*.egg-info' -not -path './venv/*' -exec rm -rf {} +",
             dist="find ./ -name 'dist' -exec rm -rf {} +"
         )
         if self.egg is not None:
