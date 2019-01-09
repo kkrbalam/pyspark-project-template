@@ -15,19 +15,21 @@ if [[ "${ENV}" == "prod" ]]; then
     export HADOOP_CONF_DIR=/source/hadoop/conf
     export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
     export PATH=$SPARK_HOME/bin:$PATH
+    export PYTHONPATH=$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
 
 elif [[ "${ENV}" == "uat" ]]; then
     # == HADOOP + SPARK ==
     export HADOOP_CONF_DIR=/source/hadoop/conf
-    # export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
-    export SPARK_HOME=/usr/local/spark-2.1.0-bin-hadoop2.7
+    export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
     export PATH=$SPARK_HOME/bin:$PATH
+    export PYTHONPATH=$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
 
 elif [[ "${ENV}" == "ut" ]]; then
     # == HADOOP + SPARK ==
     export HADOOP_CONF_DIR=/etc/hadoop/conf
-    export SPARK_HOME=/opt/spark-2.1.0-bin-hadoop2.6
+    export SPARK_HOME=/etc/spark-2.3.1-bin-hadoop2.6
     export PATH=$SPARK_HOME/bin:$PATH
+    export PYTHONPATH=$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
 
 elif [[ "${ENV}" == "dev" ]]; then
     # == HADOOP + SPARK ==
