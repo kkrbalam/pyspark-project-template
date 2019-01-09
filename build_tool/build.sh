@@ -24,7 +24,7 @@ function usage()
        -c|--clean                            Clean build result (venv)
        -r|--rebuild                          Rebuild Project, Clean and Build
        -p|--python                           Python version (Default:2) e.g. --python 2.7
-       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder  
+       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder 
 
     "
 }
@@ -42,7 +42,7 @@ eval set -- "$args"
 while true ; do
   case "$1" in
     -b|--build )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         shift
         ;;
     -c|--clean )
@@ -50,7 +50,7 @@ while true ; do
         shift
         ;;
     -r|--rebuild )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         CLEAN_OPT="true"
         shift
         ;;
@@ -95,7 +95,7 @@ fi
 function build_project()
 {
 
-    # check exists for ENV variable and config 
+    # check exists for ENV variable and config
     if [[ -z ${ENV} ]] ; then
         echo "$(basename $0): missing ENV : ${ENV}"
         usage
