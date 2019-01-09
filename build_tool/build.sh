@@ -24,12 +24,13 @@ function usage()
        -c|--clean                            Clean build result (venv)
        -r|--rebuild                          Rebuild Project, Clean and Build
        -p|--python                           Python version (Default:2) e.g. --python 2.7
-       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder  
+       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder 
+       -t|--test                             Execute test case 
 
     "
 }
 
-args=`getopt -o hrbcdp: --long build,clean,rebuild,clean-deps,python:,help \
+args=`getopt -o hrbcdtp: --long build,clean,rebuild,clean-deps,test,python:,help \
      -n 'build.sh' -- "$@"`
 
 if [ $? != 0 ] ; then
@@ -42,7 +43,7 @@ eval set -- "$args"
 while true ; do
   case "$1" in
     -b|--build )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         shift
         ;;
     -c|--clean )
@@ -50,7 +51,7 @@ while true ; do
         shift
         ;;
     -r|--rebuild )
-        BUILD_OPT="true" 
+        BUILD_OPT="true"
         CLEAN_OPT="true"
         shift
         ;;
@@ -60,6 +61,10 @@ while true ; do
         ;;
     -d|--clean-deps)
         CLEAN_DEPS_OPT="true"
+        shift
+        ;;
+    -t|--test)
+        TEST_OPT="true"
         shift
         ;;
     -h|--help )
@@ -82,7 +87,7 @@ for arg do
 done
 
 # check for required args
-if [[ -z ${ENV} ]] && [[ -n ${BUILD_OPT} ]] ; then
+if [[ -z ${ENV} ]] && ([[ -n ${BUILD_OPT} ]] || [[ -n ${TEST_OPT} ]]) ; then
   echo "$(basename $0): missing ENV : ${ENV}"
   usage
   exit 1
@@ -95,7 +100,7 @@ fi
 function build_project()
 {
 
-    # check exists for ENV variable and config 
+    # check exists for ENV variable and config
     if [[ -z ${ENV} ]] ; then
         echo "$(basename $0): missing ENV : ${ENV}"
         usage
@@ -113,17 +118,21 @@ function build_project()
 
 function clean_project()
 {
-
     clean_deps
     log_info "Start to clean project"
     clean_project_func
 }
 
 function clean_deps(){
-    log_info "Start to Remove dependencies"
+    log_info "Start to remove dependencies"
     clean_py_deps_func
 }
 
+function test_case(){
+    build_project
+    log_info "Start to execute test case"
+    test_case_py_func
+}
 # call function
 
 if [[ -n $CLEAN_OPT ]]; then
@@ -136,4 +145,8 @@ fi
 
 if [[ -n $CLEAN_DEPS_OPT ]]; then
     clean_deps
+fi
+
+if [[ -n $TEST_OPT ]]; then
+    test_case
 fi

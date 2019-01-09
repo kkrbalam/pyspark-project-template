@@ -114,3 +114,9 @@ function clean_project_func()
     fi
 }
 
+function test_case_py_func()
+{
+    printf "\E[0;33;40m ================= [flake8] Start ================== \n"
+    flake8
+    printf "\E[0;33;40m ================= [flake8] End ================== \n"
+}
