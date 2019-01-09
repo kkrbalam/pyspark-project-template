@@ -1,2 +1,5 @@
 click==6.6
+ipython==5.8.0
+ipykernel==4.10.0
+papermill==0.16.2
 #pyarrow==0.10.0
