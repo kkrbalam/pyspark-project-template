@@ -112,6 +112,40 @@ class InstallLibs(Command):
             print('set py_pkg path')
 
 
+class InstallExtra(Command):
+    """
+        install packages in extra_requires
+        usage:
+            python setup.py extra -k <key> [-p py_pkg | --lib-path=py_pkg] [--pip-args="{pip-args}"]
+        notice
+            pip-args: use "" to wrap your pip arguments
+    """
+    description = "Install extra_requires with key"
+    user_options = [('key=', 'k', "key in extra_requires to install libs"),
+                    ('pip-args=', None, 'args for pip')]
+
+    def initialize_options(self):
+        self.key = None
+        self.pip_args = None
+
+    def finalize_options(self):
+        if self.pip_args is None:
+            print('pip-args not set, using: https://pypi.org/simple/')
+
+    def run(self):
+        if self.key is not None:
+            cmd_list = ["pip install -e .[{}] --disable-pip-version-check --no-cache-dir".format(self.key)]
+        else:
+            cmd_list = [
+                "pip install -e .[{}] --disable-pip-version-check --no-cache-dir".format(k) for k in self.distribution.extras_require]
+        if self.pip_args is not None:
+            cmd_list = map(lambda v: ' '.join([v, self.pip_args]), cmd_list)
+
+        for cmd in cmd_list:
+            print(cmd)
+            os.system(cmd)
+
+
 class Clean(Command):
     """
         custom clean command
@@ -184,5 +218,6 @@ setup(
     cmdclass={'install': Install,
               'test': PyTest,
               'lib': InstallLibs,
+              'extra': InstallExtra,
               'clean': Clean}
 )
