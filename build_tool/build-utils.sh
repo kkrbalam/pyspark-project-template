@@ -28,12 +28,12 @@ function build_py_project_func()
 
     cd "${APP_HOME}"
 
-    validate_python_rtn=$(validate_python_version $python_version)
+    validate_python_rtn=$(validate_python_version_func $python_version)
     log_info "validate_python_rtn: $validate_python_rtn"
     if [[ $validate_python_rtn != 127 ]]; then
 
-        install_virtualenv $python_version
-        install_py_project
+        install_virtualenv_func $python_version
+        install_py_project_func
     else
         log_error "validate python error!"
     fi
@@ -41,7 +41,7 @@ function build_py_project_func()
 }
 
 
-function validate_python_version()
+function validate_python_version_func()
 {
     python_version=$1
 
@@ -49,7 +49,7 @@ function validate_python_version()
     echo $?
 }
 
-function install_virtualenv()
+function install_virtualenv_func()
 {
 
     python_version=$1
@@ -73,10 +73,11 @@ function install_virtualenv()
 
 }
 
-function install_py_project()
+function install_py_project_func()
 {
     # enter virtualenv
     source ${PY_VENV}/bin/activate
+    cd ${APP_HOME}
 
     # install moudule in py_pkg
     log_info "install py_pkg by setup.py"
@@ -88,6 +89,14 @@ function install_py_project()
     cd ${APP_HOME}
     python setup.py install --pip-args="${PIP_OPTS}"
 
+    # exit virtualenv
+    deactivate
+}
+
+function clean_py_deps_func()
+{
+    # enter virtualenv
+    source ${PY_VENV}/bin/activate
     # clean .egg folder or file
     log_info "run setup.py clean -e"
     cd ${APP_HOME}
@@ -95,7 +104,6 @@ function install_py_project()
     # exit virtualenv
     deactivate
 }
-
 
 function clean_project_func()
 {

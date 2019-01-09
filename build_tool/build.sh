@@ -21,13 +21,15 @@ function usage()
     OPTIONS:
        -h|--help                             Show this message
        -b|--build                            Build project
-       -c|--clean                            Clean last build result
-       -r|--rebuild                          Rebuild Project
+       -c|--clean                            Clean build result (venv)
+       -r|--rebuild                          Rebuild Project, Clean and Build
        -p|--python                           Python version (Default:2) e.g. --python 2.7
+       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder  
+
     "
 }
 
-args=`getopt -o hrbcdp: --long build,clean,rebuild,python:,help \
+args=`getopt -o hrbcdp: --long build,clean,rebuild,clean-deps,python:,help \
      -n 'build.sh' -- "$@"`
 
 if [ $? != 0 ] ; then
@@ -55,6 +57,10 @@ while true ; do
     -p|--python )
         PYTHON_VERSION="$2"
         shift 2
+        ;;
+    -d|--clean-deps)
+        CLEAN_DEPS_OPT="true"
+        shift
         ;;
     -h|--help )
         usage
@@ -85,10 +91,6 @@ fi
 . "${APP_HOME}/build_tool/build.conf"
 
 
-function clean_deps(){
-    log_info "Start to Remove dependencies"
-    clean_deps_func ${LIB_PATH}
-}
 
 function build_project()
 {
@@ -111,11 +113,16 @@ function build_project()
 
 function clean_project()
 {
-    
+
+    clean_deps
     log_info "Start to clean project"
     clean_project_func
 }
 
+function clean_deps(){
+    log_info "Start to Remove dependencies"
+    clean_py_deps_func
+}
 
 # call function
 
@@ -127,3 +134,6 @@ if [[ -n $BUILD_OPT ]]; then
     build_project
 fi
 
+if [[ -n $CLEAN_DEPS_OPT ]]; then
+    clean_deps
+fi
