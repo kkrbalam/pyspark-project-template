@@ -88,13 +88,13 @@ function install_py_project_func()
     # install moudule in main project
     log_info "install ${APP_NAME} by setup.py"
     cd ${APP_HOME}
+
+    log_info "python setup.py install --pip-args=${PIP_OPTS}"
+    python setup.py install --pip-args="${PIP_OPTS}"
+
     if [[ "$test_mode" = true ]]; then
         log_info "python setup.py extra --pip-args=${PIP_OPTS}"
         python setup.py extra --pip-args="${PIP_OPTS}"
-
-    else
-        log_info "python setup.py install --pip-args=${PIP_OPTS}"
-        python setup.py install --pip-args="${PIP_OPTS}"
     fi
 
     # exit virtualenv
