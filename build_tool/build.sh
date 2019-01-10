@@ -24,8 +24,8 @@ function usage()
        -c|--clean                            Clean build result (venv)
        -r|--rebuild                          Rebuild Project, Clean and Build
        -p|--python                           Python version (Default:2) e.g. --python 2.7
-       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder 
-       -t|--test                             Execute test case 
+       -d|--clean-deps                       Clean dependences from dist, build, egg_info folder
+       -t|--test                             Execute test case
 
     "
 }
@@ -99,6 +99,10 @@ fi
 
 function build_project()
 {
+    test_mode=$1
+    if [[ -z "$test_mode" ]]; then
+        test_mode=false
+    fi
 
     # check exists for ENV variable and config
     if [[ -z ${ENV} ]] ; then
@@ -113,7 +117,7 @@ function build_project()
     log_info "write ${ENV} to ENV arg in $env_config"
     grep -q "^ENV" "$env_config" && sed_command "s/^ENV.*/ENV=\\\"${ENV}\\\"/" "$env_config"
 
-    build_py_project_func ${PYTHON_VERSION}
+    build_py_project_func "${PYTHON_VERSION}" "${test_mode}"
 }
 
 function clean_project()
@@ -129,7 +133,7 @@ function clean_deps(){
 }
 
 function test_case(){
-    build_project
+    build_project true
     log_info "Start to execute test case"
     test_case_py_func
 }

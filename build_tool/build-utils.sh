@@ -16,9 +16,10 @@ function build_py_project_func()
 {
     log_info "[BUILD] Start to build $APP_NAME "
 
-    build_basic_project_func
-
     python_version=$1
+    test_mode=$2
+
+    build_basic_project_func
 
     if [[ -z $python_version ]];then
         default_version=2
@@ -33,7 +34,7 @@ function build_py_project_func()
     if [[ $validate_python_rtn != 127 ]]; then
 
         install_virtualenv_func $python_version
-        install_py_project_func
+        install_py_project_func $test_mode
     else
         log_error "validate python error!"
     fi
@@ -63,7 +64,6 @@ function install_virtualenv_func()
     log_info "upgrade pip in venv"
 
     ${PY_VENV}/bin/pip install --upgrade pip --disable-pip-version-check --no-cache-dir ${PIP_OPTS}
-    # -i ${PYPI_INDEX_URL} --trusted-host ${PYPI_TRUSTED_HOST}
 
     log_info "install setuptools wheel in venv"
     ${PY_VENV}/bin/pip install setuptools wheel --disable-pip-version-check --no-cache-dir ${PIP_OPTS}
@@ -75,6 +75,7 @@ function install_virtualenv_func()
 
 function install_py_project_func()
 {
+    test_mode=$1
     # enter virtualenv
     source ${PY_VENV}/bin/activate
     cd ${APP_HOME}
@@ -87,7 +88,14 @@ function install_py_project_func()
     # install moudule in main project
     log_info "install ${APP_NAME} by setup.py"
     cd ${APP_HOME}
-    python setup.py install --pip-args="${PIP_OPTS}"
+    if [[ "$test_mode" = true ]]; then
+        log_info "python setup.py extra --pip-args=${PIP_OPTS}"
+        python setup.py extra --pip-args="${PIP_OPTS}"
+
+    else
+        log_info "python setup.py install --pip-args=${PIP_OPTS}"
+        python setup.py install --pip-args="${PIP_OPTS}"
+    fi
 
     # exit virtualenv
     deactivate
@@ -116,7 +124,18 @@ function clean_project_func()
 
 function test_case_py_func()
 {
+    # enter virtualenv
+    source ${PY_VENV}/bin/activate
+    cd ${APP_HOME}
+    log_info "python setup.py test"
+
+    printf "\E[0;33;40m ================= [pytest] Start ================== \n"
+    python setup.py test
+    printf "\E[0;33;40m ================= [pytest] End ================== \n"
+
     printf "\E[0;33;40m ================= [flake8] Start ================== \n"
     flake8
     printf "\E[0;33;40m ================= [flake8] End ================== \n"
+    # exit virtualenv
+    deactivate
 }
