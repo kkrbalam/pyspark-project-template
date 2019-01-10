@@ -48,3 +48,30 @@ def load_config():
     with open(os.path.join(app_home, 'var/config/config.pkl'), 'rb') as f:
         config = pickle.load(f)
     return config
+
+
+def get_full_keys(conf, root=None):
+
+    def dict_path(conf_dict, path=None, root=None):
+        if path is None:
+            if root is None:
+                path = []
+            else:
+                path = [root]
+
+        for k, v in conf_dict.iteritems():
+            newpath = path + [k]
+            if isinstance(v, dict):
+                for u in dict_path(v, newpath):
+                    yield u
+            else:
+                yield newpath, v
+
+    spark_config = dict()
+    if conf is None:
+        logger.warn("conf is empty")
+    else:
+        for path, v in dict_path(conf_dict=conf, root=root):
+            spark_config.setdefault('.'.join(path), v)
+
+    return spark_config

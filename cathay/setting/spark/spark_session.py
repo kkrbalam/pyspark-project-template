@@ -1,10 +1,8 @@
 import os
 
-from pyspark.sql import SparkSession
-
 from cathay_spark import get_spark
 
-from cathay.setting.config import load_config
+from cathay.setting.config import load_config, get_full_keys
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,10 +12,10 @@ def get_spark_session():
     config = load_config()
 
     # set app_name
+    app_name = config.get('hippo.name')
+
     if os.environ['APP_TYPE'] == 'jupyter':
-        app_name = config.get('jupyter.test.name')
-    else:
-        app_name = config.get('hippo.name')
+        app_name = '{prefix}-{app_name}'.format(prefix=config.get('jupyter.test.prefix'), app_name=app_name)
 
     # set spark mode
     if os.environ['ENV'] == 'dev':
@@ -29,12 +27,13 @@ def get_spark_session():
     logger.info('get spark session, mode: {}'.format(mode))
     spark = get_spark(app_name, mode)
 
-    spark.conf.set("spark.executor.memory", config.get("spark.executor.memory"))
-    spark.conf.set("spark.executor.cores", config.get("spark.executor.cores"))
-    spark.conf.set("spark.num.executors", config.get("spark.num.executors"))
-    spark.conf.set("spark.driver.memory", config.get("spark.driver.memory"))
-    spark.conf.set("spark.driver.cores", config.get("spark.driver.cores"))
-    spark.conf.set("spark.port.maxretries", config.get("spark.port.maxretries"))
+    # set spark configuration
+    logger.info('set spark configuration ...')
+    spark_configs = get_full_keys(config.get("spark", None), "spark")
+
+    for k, v in spark_configs.items():
+        logger.info("{} = {}".format(k, v))
+        spark.conf.set(k, v)
 
     return spark
 
