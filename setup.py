@@ -134,10 +134,16 @@ class InstallExtra(Command):
 
     def run(self):
         if self.key is not None:
-            cmd_list = ["pip install -e .[{}] --disable-pip-version-check --no-cache-dir".format(self.key)]
+            if self.key in self.distribution.extras_require:
+                cmd_list = ["pip install {} --disable-pip-version-check --no-cache-dir".format(
+                    pkg) for pkg in self.distribution.extras_require[self.key]]
+            else:
+                raise ValueError('key is not in extras_require, available key: {}'.format(
+                    self.distribution.extras_require.keys()))
         else:
+            pkg_list = [pkg for pkgs in self.distribution.extras_require.values() for pkg in pkgs]
             cmd_list = [
-                "pip install -e .[{}] --disable-pip-version-check --no-cache-dir".format(k) for k in self.distribution.extras_require]
+                "pip install {} --disable-pip-version-check --no-cache-dir".format(pkg) for pkg in pkg_list]
         if self.pip_args is not None:
             cmd_list = map(lambda v: ' '.join([v, self.pip_args]), cmd_list)
 
