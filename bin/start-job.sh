@@ -29,6 +29,7 @@ spark-submit \
     --master local \
     --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_101/ \
     --conf spark.port.maxRetries=${SPARK_PORT_MAXRETRIES} \
+    --conf spark.driver.extraJavaOptions="-Dlog4j.configuration=file://${APP_HOME}/log4j.properties -DAPP_HOME=${APP_HOME}" \
     --executor-memory ${EXECUTOR_MEMORY} \
     --executor-cores ${EXECUTOR_CORES} \
     --num-executors ${NUM_EXECUTORS} \
